@@ -1,5 +1,5 @@
-resource "heroku_app" "rent_your_stuff_staging" {
-  name   = "rent-your-stuff-staging"
+resource "heroku_app" "rent_your_stuff_kagzz" {
+  name   = "rent-your-stuff-kagzz"
   region = "eu"
 
   buildpacks = [
