@@ -27,7 +27,7 @@ resource "heroku_pipeline_coupling" "kagzz_pipeline_coupling" {
 // Add the GitHub repository integration with the pipeline.
 resource "herokux_pipeline_github_integration" "pipeline_integration" {
   pipeline_id = heroku_pipeline.rent_your_stuff_kagzz_pipeline.id
-  org_repo = "alexkagzz/jmix-rys"
+  org_repo = "alexkagzz/rent-your-stuff"
 }
 
 // Add Heroku app GitHub integration.
