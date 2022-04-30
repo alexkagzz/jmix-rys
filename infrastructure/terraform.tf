@@ -12,7 +12,7 @@ terraform {
     }
   }
   backend "remote" {
-    organization = "rent-your-stuff"
+    organization = "alexkagzz"
 
     workspaces {
       name = "rent-your-stuff"
