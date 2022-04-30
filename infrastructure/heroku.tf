@@ -13,7 +13,7 @@ resource "heroku_addon" "rent_your_stuff_kagzz_db" {
 }
 
 resource "heroku_pipeline" "rent_your_stuff_kagzz_pipeline" {
-  name = "rent_your_stuff_kagzz_pipeline"
+  name = "rent-your-stuff-kagzz-pipeline"
 }
 
 # Couple app to pipeline.
