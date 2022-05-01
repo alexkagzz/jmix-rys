@@ -1,9 +1,8 @@
 package com.kagzz.jmix.rys.customer;
 
-import com.kagzz.jmix.rys.customer.entity.Customer;
 import com.kagzz.jmix.rys.entity.Address;
+import com.kagzz.jmix.rys.test_support.ValidationVerification;
 import io.jmix.core.DataManager;
-import io.jmix.core.security.SystemAuthenticator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
