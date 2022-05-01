@@ -1,5 +1,6 @@
-package com.kagzz.jmix.rys.customer.entity;
+package com.kagzz.jmix.rys.customer;
 
+import com.kagzz.jmix.rys.customer.entity.Customer;
 import com.kagzz.jmix.rys.entity.Address;
 import io.jmix.core.DataManager;
 import io.jmix.core.security.SystemAuthenticator;
@@ -8,17 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.validation.groups.Default;
-
-import java.util.Set;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class CustomerIntegrationTest {
+class CustomerValidationTest {
 
     @Autowired
     DataManager dataManager;
@@ -27,7 +23,8 @@ class CustomerIntegrationTest {
     SystemAuthenticator systemAuthenticator;
 
     @Autowired
-    Validator validator;
+    ValidationVerification validationVerification;
+
 
     private Customer customer;
 
@@ -60,25 +57,32 @@ class CustomerIntegrationTest {
     }
 
     @Test
-    void given_customerWithInvalidEmail_when_validateCustomer_then_customerIsInvalid() {
+    void given_customerWithInvalidEmail_when_validateCustomer_then_oneViolationOccurs() {
 
 //        Given
+        customer.setLastName("Bar");
         customer.setEmail("invalidEmailAddress");
 
 //        When
-        Set<ConstraintViolation<Customer>> violations = validator.validate(customer, Default.class);
+        List<ValidationVerification.ValidationResults> violations = validationVerification.validate(customer);
 
 //        Then
         assertThat(violations).hasSize(1);
-
-//        And
-        assertThat(getViolation(violations).getPropertyPath().toString()).isEqualTo("email");
-        assertThat(getViolation(violations).getMessageTemplate())
-                .isEqualTo("{javax.validation.constraints.Email.message}");
     }
+    @Test
+    void given_customerWithInvalidEmail_when_validateCustomer_then_customerIsInvalidBecauseOfEmail() {
 
-    private ConstraintViolation<Customer> getViolation(Set<ConstraintViolation<Customer>> violations) {
-        return violations.stream().findFirst().orElseThrow();
+//        Given
+        customer.setLastName("Bar");
+        customer.setEmail("invalidEmailAddress");
+
+//        When
+       ValidationVerification.ValidationResults  emailViolations = validationVerification.validateFirst(customer);
+
+//        Then
+        assertThat(emailViolations.getAttribute()).isEqualTo("email");
+        assertThat(emailViolations.getErrorType())
+                .isEqualTo(validationVerification.validationMessage("Email"));
     }
 
 }
