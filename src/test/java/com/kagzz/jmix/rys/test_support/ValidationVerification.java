@@ -1,4 +1,4 @@
-package com.kagzz.jmix.rys.customer;
+package com.kagzz.jmix.rys.test_support;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -2,6 +2,8 @@ package com.kagzz.jmix.rys.customer;
 
 import com.kagzz.jmix.rys.customer.entity.Customer;
 import com.kagzz.jmix.rys.entity.Address;
+import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
+import com.kagzz.jmix.rys.test_support.ValidationVerification;
 import io.jmix.core.DataManager;
 import io.jmix.core.security.SystemAuthenticator;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,11 +27,14 @@ class CustomerValidationTest {
     @Autowired
     ValidationVerification validationVerification;
 
+    @Autowired
+    DatabaseCleanup databaseCleanup;
 
     private Customer customer;
 
     @BeforeEach
     void setUp() {
+        databaseCleanup.removeAllEntities(Customer.class);
         customer = dataManager.create(Customer.class);
     }
 

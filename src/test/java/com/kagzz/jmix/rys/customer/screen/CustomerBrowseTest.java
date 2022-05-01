@@ -3,6 +3,7 @@ package com.kagzz.jmix.rys.customer.screen;
 import com.kagzz.jmix.rys.RentYourStuffApplication;
 import com.kagzz.jmix.rys.customer.entity.Customer;
 import com.kagzz.jmix.rys.entity.Address;
+import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
 import io.jmix.core.DataManager;
 import io.jmix.ui.Screens;
 import io.jmix.ui.component.Button;
@@ -32,10 +33,15 @@ class CustomerBrowseTest {
     @Autowired
     DataManager dataManager;
 
+    @Autowired
+    DatabaseCleanup databaseCleanup;
+
     private Customer customer;
 
     @BeforeEach
     void setUp() {
+        databaseCleanup.removeAllEntities(Customer.class);
+
         customer = dataManager.create(Customer.class);
         customer.setFirstName("Foo");
         customer.setLastName("Bar");
