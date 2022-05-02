@@ -4,9 +4,11 @@ import com.kagzz.jmix.rys.entity.Currency;
 import com.kagzz.jmix.rys.entity.Money;
 import com.kagzz.jmix.rys.product.entity.PriceUnit;
 import com.kagzz.jmix.rys.product.entity.Product;
+import com.kagzz.jmix.rys.product.entity.ProductCategory;
 import com.kagzz.jmix.rys.product.entity.ProductPrice;
 import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
 import io.jmix.core.DataManager;
+import io.jmix.core.FetchPlan;
 import io.jmix.core.Id;
 import io.jmix.core.security.SystemAuthenticator;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +41,7 @@ class ProductStorageTest {
     void setUp() {
         databaseCleanup.removeAllEntities(ProductPrice.class);
         databaseCleanup.removeAllEntities(Product.class);
+        databaseCleanup.removeAllEntities(ProductCategory.class);
         product = dataManager.create(Product.class);
     }
 
@@ -50,7 +53,7 @@ class ProductStorageTest {
         product.setDescription("Description for prod One");
 
 //        When
-         Product savedProduct = systemAuthenticator.withSystem(() -> dataManager.save(product));
+        Product savedProduct = systemAuthenticator.withSystem(() -> dataManager.save(product));
 
 //        Then
         assertThat(savedProduct.getId()).isNotNull();
@@ -81,6 +84,32 @@ class ProductStorageTest {
         assertThat(savedProduct).isPresent();
     }
 
+    @Test
+    void given_validProductWithCategory_when_saveProduct_then_productAndCategoryAreSaved() {
+
+//        Given
+        product.setName("Prod One");
+        product.setDescription("Description for prod One");
+
+//        And
+        ProductCategory savedProductCategory = saveProductCategory("Foo Category One");
+
+        product.setCategory(savedProductCategory);
+
+//        When
+        Optional<Product> savedProduct = systemAuthenticator.withSystem(() -> {
+            dataManager.save(product);
+            return loadProductWithCategory(product);
+        });
+
+//        Then
+        assertThat(savedProduct)
+                .isPresent()
+                .get()
+                .extracting("category")
+                .isEqualTo(savedProductCategory);
+    }
+
     @NotNull
     private ProductPrice createProductPrice(PriceUnit unit, int val, Product product) {
         Money money = dataManager.create(Money.class);
@@ -92,6 +121,22 @@ class ProductStorageTest {
         pricePerWeek.setUnit(unit);
         pricePerWeek.setPrice(money);
         return pricePerWeek;
+    }
+
+    @NotNull
+    private Optional<Product> loadProductWithCategory(Product product) {
+        return dataManager.load(Id.of(product)).fetchPlan(productFPB -> {
+                    productFPB.addFetchPlan(FetchPlan.BASE);
+                    productFPB.add("category", categoryFPB -> categoryFPB.addFetchPlan(FetchPlan.BASE));
+                })
+                .optional();
+    }
+
+    @NotNull
+    private ProductCategory saveProductCategory(String name) {
+        ProductCategory productCategory = dataManager.create(ProductCategory.class);
+        productCategory.setName(name);
+        return systemAuthenticator.withSystem(() -> dataManager.save(productCategory));
     }
 
 
