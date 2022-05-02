@@ -1,5 +1,7 @@
 package com.kagzz.jmix.rys.product;
 
+import com.kagzz.jmix.rys.entity.Currency;
+import com.kagzz.jmix.rys.entity.Money;
 import com.kagzz.jmix.rys.product.entity.PriceUnit;
 import com.kagzz.jmix.rys.product.entity.Product;
 import com.kagzz.jmix.rys.product.entity.ProductPrice;
@@ -40,8 +42,11 @@ class ProductPriceValidationTest {
     void given_validProductPrice_when_validate_then_noViolationOccurs() {
 
 //        Given
+        Money money = dataManager.create(Money.class);
+        money.setAmount(BigDecimal.valueOf(5));
+        money.setCurrency(Currency.KES);
         productPrice.setUnit(PriceUnit.DAY);
-        productPrice.setAmount(BigDecimal.valueOf(5));
+        productPrice.setPrice(money);
         productPrice.setProduct(dataManager.create(Product.class));
 
 //        When
@@ -55,7 +60,10 @@ class ProductPriceValidationTest {
     void given_productPriceWithoutUnit_when_validate_then_oneViolationOccurs() {
 
 //        Given
-        productPrice.setAmount(BigDecimal.valueOf(5));
+        Money money = dataManager.create(Money.class);
+        money.setAmount(BigDecimal.valueOf(5));
+        money.setCurrency(Currency.KES);
+        productPrice.setPrice(money);
         productPrice.setProduct(dataManager.create(Product.class));
 
 //        When
@@ -76,7 +84,12 @@ class ProductPriceValidationTest {
     void given_productPriceWithoutAmount_when_validate_then_oneViolationOccurs() {
 
 //        Given
+        Money money = dataManager.create(Money.class);
+        money.setAmount(null);
+        money.setCurrency(Currency.KES);
+
         productPrice.setUnit(PriceUnit.DAY);
+        productPrice.setPrice(money);
         productPrice.setProduct(dataManager.create(Product.class));
 
 //        When
@@ -87,7 +100,7 @@ class ProductPriceValidationTest {
 
         ValidationVerification.ValidationResults  amountViolations = violations.get(0);
 
-        assertThat(amountViolations.getAttribute()).isEqualTo("amount");
+        assertThat(amountViolations.getAttribute()).isEqualTo("price.amount");
 
         assertThat(amountViolations.getErrorType())
                 .isEqualTo(validationVerification.validationMessage("NotNull"));
@@ -97,8 +110,11 @@ class ProductPriceValidationTest {
     void given_productPriceWithNegativeAmount_when_validate_then_oneViolationOccurs() {
 
 //        Given
+        Money money = dataManager.create(Money.class);
+        money.setAmount(BigDecimal.valueOf(-5));
+        money.setCurrency(Currency.KES);
         productPrice.setUnit(PriceUnit.DAY);
-        productPrice.setAmount(BigDecimal.valueOf(-5));
+        productPrice.setPrice(money);
         productPrice.setProduct(dataManager.create(Product.class));
 
 //        When
@@ -109,7 +125,7 @@ class ProductPriceValidationTest {
 
         ValidationVerification.ValidationResults negativeAmountViolations = violations.get(0);
 
-        assertThat(negativeAmountViolations.getAttribute()).isEqualTo("amount");
+        assertThat(negativeAmountViolations.getAttribute()).isEqualTo("price.amount");
 
         assertThat(negativeAmountViolations.getErrorType())
                 .isEqualTo(validationVerification.validationMessage("PositiveOrZero"));
@@ -119,8 +135,11 @@ class ProductPriceValidationTest {
     void given_productPriceWithoutProduct_when_validate_then_oneViolationOccurs() {
 
 //        Given
+        Money money = dataManager.create(Money.class);
+        money.setAmount(BigDecimal.valueOf(5));
+        money.setCurrency(Currency.KES);
         productPrice.setUnit(PriceUnit.DAY);
-        productPrice.setAmount(BigDecimal.valueOf(5));
+        productPrice.setPrice(money);
 
 //        When
         List<ValidationVerification.ValidationResults>  violations = validationVerification.validate(productPrice);

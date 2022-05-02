@@ -1,14 +1,15 @@
 package com.kagzz.jmix.rys.product.entity;
 
+import com.kagzz.jmix.rys.entity.Money;
 import com.kagzz.jmix.rys.entity.StandardEntity;
+import io.jmix.core.entity.annotation.EmbeddedParameters;
 import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import java.math.BigDecimal;
 
 @JmixEntity
 @Table(name = "RYS_PRODUCT_PRICE", indexes = {
@@ -16,10 +17,15 @@ import java.math.BigDecimal;
 })
 @Entity(name = "rys_ProductPrice")
 public class ProductPrice extends StandardEntity {
-    @PositiveOrZero
-    @Column(name = "AMOUNT", nullable = false, precision = 19, scale = 2)
-    @NotNull
-    private BigDecimal amount;
+
+    @Valid
+    @EmbeddedParameters(nullAllowed = false)
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "amount", column = @Column(name = "PRICE_AMOUNT")),
+            @AttributeOverride(name = "currency", column = @Column(name = "PRICE_CURRENCY"))
+    })
+    private Money price;
 
     @Column(name = "UNIT", nullable = false)
     @NotNull
@@ -29,6 +35,14 @@ public class ProductPrice extends StandardEntity {
     @JoinColumn(name = "PRODUCT_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Product product;
+
+    public Money getPrice() {
+        return price;
+    }
+
+    public void setPrice(Money price) {
+        this.price = price;
+    }
 
     public Product getProduct() {
         return product;
@@ -46,17 +60,9 @@ public class ProductPrice extends StandardEntity {
         this.unit = unit == null ? null : unit.getId();
     }
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
     @InstanceName
-    @DependsOnProperties({"unit", "amount"})
+    @DependsOnProperties({"unit", "price"})
     public String getInstanceName() {
-        return String.format("%s / %s", amount, unit);
+        return String.format("%s / %s", price, unit);
     }
 }

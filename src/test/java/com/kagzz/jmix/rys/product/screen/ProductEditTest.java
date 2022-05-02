@@ -126,7 +126,7 @@ class ProductEditTest extends WebIntegrationTest {
         FormInteractions priceForm = FormInteractions.of(productPriceEdit);
 
         BigDecimal amount = BigDecimal.valueOf(5);
-        priceForm.setNumberFieldValue("amountField", amount);
+        priceForm.setCurrencyFieldValue("priceAmountField", amount);
         PriceUnit unit = PriceUnit.DAY;
         priceForm.setEnumFieldValue("unitField", unit);
 
@@ -151,7 +151,7 @@ class ProductEditTest extends WebIntegrationTest {
 
         ProductPrice price = getPrices(savedProduct).get(0);
 
-        assertThat(price.getAmount()).isEqualByComparingTo(amount);
+        assertThat(price.getPrice().getAmount()).isEqualByComparingTo(amount);
 
         assertThat(price.getUnit()).isEqualTo(unit);
     }

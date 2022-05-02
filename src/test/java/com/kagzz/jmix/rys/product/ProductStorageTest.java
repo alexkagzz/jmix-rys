@@ -1,5 +1,7 @@
 package com.kagzz.jmix.rys.product;
 
+import com.kagzz.jmix.rys.entity.Currency;
+import com.kagzz.jmix.rys.entity.Money;
 import com.kagzz.jmix.rys.product.entity.PriceUnit;
 import com.kagzz.jmix.rys.product.entity.Product;
 import com.kagzz.jmix.rys.product.entity.ProductPrice;
@@ -81,10 +83,14 @@ class ProductStorageTest {
 
     @NotNull
     private ProductPrice createProductPrice(PriceUnit unit, int val, Product product) {
+        Money money = dataManager.create(Money.class);
+        money.setAmount(BigDecimal.valueOf(val));
+        money.setCurrency(Currency.KES);
+
         ProductPrice pricePerWeek = dataManager.create(ProductPrice.class);
         pricePerWeek.setProduct(product);
         pricePerWeek.setUnit(unit);
-        pricePerWeek.setAmount(BigDecimal.valueOf(val));
+        pricePerWeek.setPrice(money);
         return pricePerWeek;
     }
 

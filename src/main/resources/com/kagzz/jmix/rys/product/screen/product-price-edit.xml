@@ -5,7 +5,10 @@
     <data>
         <instance id="productPriceDc"
                   class="com.kagzz.jmix.rys.product.entity.ProductPrice">
-            <fetchPlan extends="_base"/>
+            <fetchPlan extends="_base">
+                <property name="product" fetchPlan="_base"/>
+                <property name="price" fetchPlan="_base"/>
+            </fetchPlan>
             <loader/>
         </instance>
     </data>
@@ -29,8 +32,8 @@
     <layout spacing="true" expand="editActions">
         <form id="form" dataContainer="productPriceDc">
             <column width="350px">
-                <textField id="amountField" property="amount"/>
                 <comboBox id="unitField" property="unit"/>
+                <currencyField id="priceAmountField" property="price.amount"/>
             </column>
         </form>
         <hbox id="editActions" spacing="true">
