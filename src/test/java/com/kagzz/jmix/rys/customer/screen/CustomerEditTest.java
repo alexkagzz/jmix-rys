@@ -4,6 +4,8 @@ import com.kagzz.jmix.rys.RentYourStuffApplication;
 import com.kagzz.jmix.rys.customer.entity.Customer;
 import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
 import com.kagzz.jmix.rys.test_support.ui.FormInteractions;
+import com.kagzz.jmix.rys.test_support.ui.ScreenInteractions;
+import com.kagzz.jmix.rys.test_support.ui.WebIntegrationTest;
 import io.jmix.core.DataManager;
 import io.jmix.core.SaveContext;
 import io.jmix.core.querycondition.PropertyCondition;
@@ -26,11 +28,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@UiTest(authenticatedUser = "admin", mainScreenId = "rys_MainScreen", screenBasePackages = "com.kagzz.jmix.rys")
-@ContextConfiguration(classes = {RentYourStuffApplication.class, UiTestAssistConfiguration.class})
-@AutoConfigureTestDatabase
-class CustomerEditTest {
+class CustomerEditTest extends WebIntegrationTest {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(CustomerEditTest.class);
     @Autowired
@@ -49,7 +47,8 @@ class CustomerEditTest {
     void given_validCustomer_when_saveCustomerThroughTheForm_then_customerIsSaved(Screens screens) {
 
 //        Given:
-        CustomerEdit customerEdit = openCustomerBrowse(screens);
+        ScreenInteractions screenInteractions = ScreenInteractions.forEditor(screens, dataManager);
+        CustomerEdit customerEdit = screenInteractions.openEditorForCreation(CustomerEdit.class, Customer.class);
         formInteractions = FormInteractions.of(customerEdit);
 
 
@@ -58,12 +57,12 @@ class CustomerEditTest {
         String lastName = "Bar"+ UUID.randomUUID();
         log.info("Customer FirstName is {}", firstName);
         log.info("Customer LastName is {}", lastName);
-        formInteractions.setFieldValue("firstNameField",  firstName);
-        formInteractions.setFieldValue("lastNameField", lastName);
-        formInteractions.setFieldValue("emailField",  "foo@bar.com");
-        formInteractions.setFieldValue("addressStreetField",  "Foo Street");
-        formInteractions.setFieldValue("addressPostalCodeField",  "00300");
-        formInteractions.setFieldValue("addressCityField",  "Kiambu");
+        formInteractions.setTextFieldValue("firstNameField",  firstName);
+        formInteractions.setTextFieldValue("lastNameField", lastName);
+        formInteractions.setTextFieldValue("emailField",  "foo@bar.com");
+        formInteractions.setTextFieldValue("addressStreetField",  "Foo Street");
+        formInteractions.setTextFieldValue("addressPostalCodeField",  "00300");
+        formInteractions.setTextFieldValue("addressCityField",  "Kiambu");
 
 //        When
         OperationResult operationResult = formInteractions.saveForm();
@@ -87,7 +86,8 @@ class CustomerEditTest {
     void given_withoutStreet_when_saveCustomerThroughTheForm_then_customerIsNotSaved(Screens screens) {
 
 //        Given:
-        CustomerEdit customerEdit = openCustomerBrowse(screens);
+        ScreenInteractions screenInteractions = ScreenInteractions.forEditor(screens, dataManager);
+        CustomerEdit customerEdit = screenInteractions.openEditorForCreation(CustomerEdit.class, Customer.class);
         formInteractions = FormInteractions.of(customerEdit);
 
 //       And
@@ -95,11 +95,11 @@ class CustomerEditTest {
         String lastName = "Bar"+ UUID.randomUUID();
         log.info("Customer FirstName is {}", firstName);
         log.info("Customer LastName is {}", lastName);
-        formInteractions.setFieldValue("firstNameField",  firstName);
-        formInteractions.setFieldValue("lastNameField",  lastName);
-        formInteractions.setFieldValue("emailField",  "foo@bar.com");
-        formInteractions.setFieldValue("addressPostalCodeField",  "00300");
-        formInteractions.setFieldValue("addressCityField",  "Kiambu");
+        formInteractions.setTextFieldValue("firstNameField",  firstName);
+        formInteractions.setTextFieldValue("lastNameField",  lastName);
+        formInteractions.setTextFieldValue("emailField",  "foo@bar.com");
+        formInteractions.setTextFieldValue("addressPostalCodeField",  "00300");
+        formInteractions.setTextFieldValue("addressCityField",  "Kiambu");
 
 //        When
         OperationResult operationResult = formInteractions.saveForm();
@@ -119,14 +119,5 @@ class CustomerEditTest {
         return dataManager.load(Customer.class)
                 .condition(PropertyCondition.equal(attribute, value))
                 .optional();
-    }
-
-    @NotNull
-    private CustomerEdit openCustomerBrowse(Screens screens) {
-        CustomerEdit customerEdit = screens.create(CustomerEdit.class);
-        Customer customer = dataManager.create(Customer.class);
-        customerEdit.setEntityToEdit(customer);
-        customerEdit.show();
-        return customerEdit;
     }
 }
