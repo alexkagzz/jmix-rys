@@ -16,16 +16,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class CustomerValidationTest {
+class CustomerIntegrationTest {
 
     @Autowired
     DataManager dataManager;
 
     @Autowired
     SystemAuthenticator systemAuthenticator;
-
-    @Autowired
-    ValidationVerification validationVerification;
 
     @Autowired
     DatabaseCleanup databaseCleanup;
@@ -39,32 +36,26 @@ class CustomerValidationTest {
     }
 
     @Test
-    void given_customerWithInvalidEmail_when_validateCustomer_then_oneViolationOccurs() {
+    void given_validCustomer_when_saveCustomer_then_customerIsSaved() {
 
 //        Given
+        customer.setFirstName("Foo");
         customer.setLastName("Bar");
-        customer.setEmail("invalidEmailAddress");
+        customer.setEmail("foo@bar.com");
+
+        Address address = dataManager.create(Address.class);
+        address.setCity("Kiambu");
+        address.setStreet("Kasarini");
+        address.setPostalCode("00300");
+
+        customer.setAddress(address);
 
 //        When
-        List<ValidationVerification.ValidationResults> violations = validationVerification.validate(customer);
+        Customer savedCustomer = systemAuthenticator.withSystem(() -> dataManager.save(customer));
 
 //        Then
-        assertThat(violations).hasSize(1);
-    }
-    @Test
-    void given_customerWithInvalidEmail_when_validateCustomer_then_customerIsInvalidBecauseOfEmail() {
-
-//        Given
-        customer.setLastName("Bar");
-        customer.setEmail("invalidEmailAddress");
-
-//        When
-       ValidationVerification.ValidationResults  emailViolations = validationVerification.validateFirst(customer);
-
-//        Then
-        assertThat(emailViolations.getAttribute()).isEqualTo("email");
-        assertThat(emailViolations.getErrorType())
-                .isEqualTo(validationVerification.validationMessage("Email"));
+        assertThat(savedCustomer.getId())
+                .isNotNull();
     }
 
 }
