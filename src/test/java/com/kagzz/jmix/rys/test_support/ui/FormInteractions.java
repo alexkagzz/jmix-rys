@@ -1,5 +1,6 @@
 package com.kagzz.jmix.rys.test_support.ui;
 
+import com.kagzz.jmix.rys.product.entity.ProductCategory;
 import io.jmix.core.metamodel.datatype.impl.EnumClass;
 import io.jmix.ui.component.*;
 import io.jmix.ui.screen.StandardEditor;
@@ -7,7 +8,9 @@ import io.jmix.ui.util.OperationResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FormInteractions {
 
@@ -44,6 +47,10 @@ public class FormInteractions {
         return (ComboBox<EnumClass<String>>) editor.getWindow().getComponent(componentId);
     }
 
+    <T> ComboBox<T> entityComboBoxField(String componentId, Class<T> entityClass) {
+        return (ComboBox<T>) editor.getWindow().getComponent(componentId);
+    }
+
     @Nullable
     Button button(String buttonId) {
         return Optional.ofNullable((Button) editor.getWindow().getComponent(buttonId)).orElseThrow();
@@ -71,4 +78,17 @@ public class FormInteractions {
     public void setCurrencyFieldValue(String componentId, BigDecimal value) {
         currencyField(componentId).setValue(value);
     }
+
+    public <T> List<T> getEntityComboBoxValues(String componentId, Class<T> entityClass) {
+        return entityComboBoxField(componentId, entityClass).getOptions().getOptions().collect(Collectors.toList());
+    }
+
+    public <T> void setEntityComboBoxFieldValue(String componentId, T entity, Class<T> entityClass) {
+        ComboBox<T> tComboBox = entityComboBoxField(componentId, entityClass);
+
+        T entityFromComboBox = tComboBox.getOptions().getOptions().filter(t -> t.equals(entity)).findFirst().orElseThrow();
+
+        tComboBox.setValue(entity);
+    }
+
 }
