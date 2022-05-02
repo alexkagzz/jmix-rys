@@ -1,28 +1,20 @@
 package com.kagzz.jmix.rys.customer.screen;
 
-import com.kagzz.jmix.rys.RentYourStuffApplication;
 import com.kagzz.jmix.rys.customer.entity.Customer;
 import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
 import com.kagzz.jmix.rys.test_support.ui.FormInteractions;
 import com.kagzz.jmix.rys.test_support.ui.ScreenInteractions;
 import com.kagzz.jmix.rys.test_support.ui.WebIntegrationTest;
 import io.jmix.core.DataManager;
-import io.jmix.core.SaveContext;
 import io.jmix.core.querycondition.PropertyCondition;
 import io.jmix.ui.Screens;
-import io.jmix.ui.testassist.UiTestAssistConfiguration;
-import io.jmix.ui.testassist.junit.UiTest;
 import io.jmix.ui.util.OperationResult;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
