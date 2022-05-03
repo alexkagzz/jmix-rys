@@ -1,8 +1,10 @@
 package com.kagzz.jmix.rys.test_support.ui;
 
 import com.kagzz.jmix.rys.RentYourStuffApplication;
+import io.jmix.ui.Screens;
 import io.jmix.ui.testassist.UiTestAssistConfiguration;
 import io.jmix.ui.testassist.junit.UiTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -12,4 +14,8 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = {RentYourStuffApplication.class, UiTestAssistConfiguration.class})
 @AutoConfigureTestDatabase
 public abstract class WebIntegrationTest {
+    @BeforeEach
+    void removeAllScreens(Screens screens) {
+        screens.removeAll();
+    }
 }
