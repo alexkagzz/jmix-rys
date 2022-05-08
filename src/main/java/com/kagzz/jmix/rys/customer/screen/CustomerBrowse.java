@@ -8,3 +8,4 @@ import com.kagzz.jmix.rys.customer.entity.Customer;
 @LookupComponent("customersTable")
 public class CustomerBrowse extends StandardLookup<Customer> {
 }
+

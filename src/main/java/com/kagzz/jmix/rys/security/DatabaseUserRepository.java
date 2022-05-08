@@ -1,6 +1,6 @@
 package com.kagzz.jmix.rys.security;
 
-import com.kagzz.jmix.rys.entity.User;
+import com.kagzz.jmix.rys.app.entity.User;
 import io.jmix.securitydata.user.AbstractDatabaseUserRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;

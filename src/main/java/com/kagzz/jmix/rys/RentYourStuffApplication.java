@@ -1,6 +1,7 @@
 package com.kagzz.jmix.rys;
 
 import com.google.common.base.Strings;
+import com.kagzz.jmix.rys.app.RentYourStuffProperties;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -30,6 +31,13 @@ public class RentYourStuffApplication {
     @ConfigurationProperties("main.datasource")
     DataSourceProperties dataSourceProperties() {
         return new DataSourceProperties();
+    }
+
+    @Bean
+    @Primary
+    @ConfigurationProperties("rys.property")
+    RentYourStuffProperties rysSourceProperties() {
+        return new RentYourStuffProperties();
     }
 
     @Bean
