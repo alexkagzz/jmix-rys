@@ -1,12 +1,12 @@
 package com.kagzz.jmix.rys.product;
 
-import com.kagzz.jmix.rys.entity.Currency;
-import com.kagzz.jmix.rys.entity.Money;
+import com.kagzz.jmix.rys.app.entity.Currency;
+import com.kagzz.jmix.rys.app.entity.Money;
 import com.kagzz.jmix.rys.product.entity.PriceUnit;
 import com.kagzz.jmix.rys.product.entity.Product;
 import com.kagzz.jmix.rys.product.entity.ProductPrice;
 import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
-import com.kagzz.jmix.rys.test_support.ValidationVerification;
+import com.kagzz.jmix.rys.test_support.Validations;
 import io.jmix.core.DataManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class ProductPriceValidationTest {
     DataManager dataManager;
 
     @Autowired
-    ValidationVerification validationVerification;
+    Validations validations;
 
     @Autowired
     DatabaseCleanup databaseCleanup;
@@ -50,7 +50,7 @@ class ProductPriceValidationTest {
         productPrice.setProduct(dataManager.create(Product.class));
 
 //        When
-        List<ValidationVerification.ValidationResults> violations = validationVerification.validate(productPrice);
+        List<Validations.ValidationResults> violations = validations.validate(productPrice);
 
 //        Then
         assertThat(violations).isEmpty();
@@ -67,17 +67,17 @@ class ProductPriceValidationTest {
         productPrice.setProduct(dataManager.create(Product.class));
 
 //        When
-        List<ValidationVerification.ValidationResults>  violations = validationVerification.validate(productPrice);
+        List<Validations.ValidationResults>  violations = validations.validate(productPrice);
 
 //        Then
         assertThat(violations).hasSize(1);
 
-        ValidationVerification.ValidationResults  unitViolations = violations.get(0);
+        Validations.ValidationResults  unitViolations = violations.get(0);
 
         assertThat(unitViolations.getAttribute()).isEqualTo("unit");
 
         assertThat(unitViolations.getErrorType())
-                .isEqualTo(validationVerification.validationMessage("NotNull"));
+                .isEqualTo(validations.validationMessage("NotNull"));
     }
 
     @Test
@@ -93,17 +93,17 @@ class ProductPriceValidationTest {
         productPrice.setProduct(dataManager.create(Product.class));
 
 //        When
-        List<ValidationVerification.ValidationResults>  violations = validationVerification.validate(productPrice);
+        List<Validations.ValidationResults>  violations = validations.validate(productPrice);
 
 //        Then
         assertThat(violations).hasSize(1);
 
-        ValidationVerification.ValidationResults  amountViolations = violations.get(0);
+        Validations.ValidationResults  amountViolations = violations.get(0);
 
         assertThat(amountViolations.getAttribute()).isEqualTo("price.amount");
 
         assertThat(amountViolations.getErrorType())
-                .isEqualTo(validationVerification.validationMessage("NotNull"));
+                .isEqualTo(validations.validationMessage("NotNull"));
     }
 
     @Test
@@ -118,17 +118,17 @@ class ProductPriceValidationTest {
         productPrice.setProduct(dataManager.create(Product.class));
 
 //        When
-        List<ValidationVerification.ValidationResults>  violations = validationVerification.validate(productPrice);
+        List<Validations.ValidationResults>  violations = validations.validate(productPrice);
 
 //        Then
         assertThat(violations).hasSize(1);
 
-        ValidationVerification.ValidationResults negativeAmountViolations = violations.get(0);
+        Validations.ValidationResults negativeAmountViolations = violations.get(0);
 
         assertThat(negativeAmountViolations.getAttribute()).isEqualTo("price.amount");
 
         assertThat(negativeAmountViolations.getErrorType())
-                .isEqualTo(validationVerification.validationMessage("PositiveOrZero"));
+                .isEqualTo(validations.validationMessage("PositiveOrZero"));
     }
 
     @Test
@@ -142,17 +142,17 @@ class ProductPriceValidationTest {
         productPrice.setPrice(money);
 
 //        When
-        List<ValidationVerification.ValidationResults>  violations = validationVerification.validate(productPrice);
+        List<Validations.ValidationResults>  violations = validations.validate(productPrice);
 
 //        Then
         assertThat(violations).hasSize(1);
 
-        ValidationVerification.ValidationResults productViolations = violations.get(0);
+        Validations.ValidationResults productViolations = violations.get(0);
 
         assertThat(productViolations.getAttribute()).isEqualTo("product");
 
         assertThat(productViolations.getErrorType())
-                .isEqualTo(validationVerification.validationMessage("NotNull"));
+                .isEqualTo(validations.validationMessage("NotNull"));
     }
 
 }

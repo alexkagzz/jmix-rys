@@ -8,6 +8,9 @@
         <item screen="rys_Product.browse" caption="msg://com.kagzz.jmix.rys.product.screen/productBrowse.menu"/>
         <item screen="rys_ProductCategory.browse"
               caption="msg://com.kagzz.jmix.rys.product.screen/productCategoryBrowse.menu"/>
+        <item screen="rys_Order.browse" caption="msg://com.kagzz.jmix.rys.order.screen/orderBrowse.menu"/>
+        <item screen="rys_StockItem.browse"
+              caption="msg://com.kagzz.jmix.rys.product.screen.stockitem/stockItemBrowse.menu"/>
     </menu>
 
 </menu-config>

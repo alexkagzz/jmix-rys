@@ -1,8 +1,7 @@
 package com.kagzz.jmix.rys.customer.screen;
 
 import com.kagzz.jmix.rys.customer.entity.Customer;
-import com.kagzz.jmix.rys.entity.Address;
-import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
+import com.kagzz.jmix.rys.app.entity.Address;
 import com.kagzz.jmix.rys.test_support.ui.ScreenInteractions;
 import com.kagzz.jmix.rys.test_support.ui.TableInteractions;
 import com.kagzz.jmix.rys.test_support.ui.WebIntegrationTest;
@@ -22,15 +21,10 @@ class CustomerBrowseTest extends WebIntegrationTest {
     @Autowired
     DataManager dataManager;
 
-    @Autowired
-    DatabaseCleanup databaseCleanup;
-
     private Customer customer;
 
     @BeforeEach
     void setUp() {
-        databaseCleanup.removeAllEntities(Customer.class);
-
         createInitialCustomer();
     }
 

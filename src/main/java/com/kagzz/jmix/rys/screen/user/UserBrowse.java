@@ -1,6 +1,6 @@
 package com.kagzz.jmix.rys.screen.user;
 
-import com.kagzz.jmix.rys.entity.User;
+import com.kagzz.jmix.rys.app.entity.User;
 import io.jmix.ui.navigation.Route;
 import io.jmix.ui.screen.*;
 

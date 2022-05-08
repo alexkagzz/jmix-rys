@@ -1,37 +1,28 @@
 package com.kagzz.jmix.rys.customer;
 
 import com.kagzz.jmix.rys.customer.entity.Customer;
-import com.kagzz.jmix.rys.entity.Address;
-import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
-import com.kagzz.jmix.rys.test_support.ValidationVerification;
+import com.kagzz.jmix.rys.app.entity.Address;
+import com.kagzz.jmix.rys.test_support.TenantUserEnvironment;
 import io.jmix.core.DataManager;
-import io.jmix.core.security.SystemAuthenticator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ExtendWith(TenantUserEnvironment.class)
 class CustomerIntegrationTest {
 
     @Autowired
     DataManager dataManager;
 
-    @Autowired
-    SystemAuthenticator systemAuthenticator;
-
-    @Autowired
-    DatabaseCleanup databaseCleanup;
-
     private Customer customer;
 
     @BeforeEach
     void setUp() {
-        databaseCleanup.removeAllEntities(Customer.class);
         customer = dataManager.create(Customer.class);
     }
 
@@ -51,7 +42,7 @@ class CustomerIntegrationTest {
         customer.setAddress(address);
 
 //        When
-        Customer savedCustomer = systemAuthenticator.withSystem(() -> dataManager.save(customer));
+        Customer savedCustomer =  dataManager.save(customer);
 
 //        Then
         assertThat(savedCustomer.getId())

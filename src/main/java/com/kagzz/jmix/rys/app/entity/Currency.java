@@ -1,4 +1,4 @@
-package com.kagzz.jmix.rys.entity;
+package com.kagzz.jmix.rys.app.entity;
 
 import io.jmix.core.metamodel.datatype.impl.EnumClass;
 

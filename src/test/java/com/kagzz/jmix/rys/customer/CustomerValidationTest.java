@@ -1,70 +1,51 @@
 package com.kagzz.jmix.rys.customer;
 
 import com.kagzz.jmix.rys.customer.entity.Customer;
-import com.kagzz.jmix.rys.entity.Address;
-import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
-import com.kagzz.jmix.rys.test_support.ValidationVerification;
-import io.jmix.core.DataManager;
-import io.jmix.core.security.SystemAuthenticator;
-import org.junit.jupiter.api.BeforeEach;
+import com.kagzz.jmix.rys.test_support.TenantUserEnvironment;
+import com.kagzz.jmix.rys.test_support.Validations;
+import com.kagzz.jmix.rys.test_support.test_data.Customers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @SpringBootTest
+@ExtendWith(TenantUserEnvironment.class)
 class CustomerValidationTest {
 
     @Autowired
-    DataManager dataManager;
+    Validations validations;
 
     @Autowired
-    SystemAuthenticator systemAuthenticator;
+    Customers customers;
 
-    @Autowired
-    ValidationVerification validationVerification;
-
-    @Autowired
-    DatabaseCleanup databaseCleanup;
-
-    private Customer customer;
-
-    @BeforeEach
-    void setUp() {
-        databaseCleanup.removeAllEntities(Customer.class);
-        customer = dataManager.create(Customer.class);
-    }
 
     @Test
-    void given_customerWithInvalidEmail_when_validateCustomer_then_oneViolationOccurs() {
+    void given_validCustomer_expect_noViolationOccurs() {
 
-//        Given
-        customer.setLastName("Bar");
-        customer.setEmail("invalidEmailAddress");
+        // given
+        Customer customer = customers.save(
+                customers.defaultData()
+                        .email("valid@email.address")
+                        .build()
+        );
 
-//        When
-        List<ValidationVerification.ValidationResults> violations = validationVerification.validate(customer);
-
-//        Then
-        assertThat(violations).hasSize(1);
+        // expect
+        validations.assertNoViolations(customer);
     }
+
     @Test
     void given_customerWithInvalidEmail_when_validateCustomer_then_customerIsInvalidBecauseOfEmail() {
 
 //        Given
-        customer.setLastName("Bar");
-        customer.setEmail("invalidEmailAddress");
-
-//        When
-       ValidationVerification.ValidationResults  emailViolations = validationVerification.validateFirst(customer);
+        Customer customer = customers.save(
+                customers.defaultData()
+                        .email("invalidEmailAddress")
+                        .build()
+        );
 
 //        Then
-        assertThat(emailViolations.getAttribute()).isEqualTo("email");
-        assertThat(emailViolations.getErrorType())
-                .isEqualTo(validationVerification.validationMessage("Email"));
+        validations.assertExactlyOneViolationWith(customer, "email", "Email");
     }
 
 }

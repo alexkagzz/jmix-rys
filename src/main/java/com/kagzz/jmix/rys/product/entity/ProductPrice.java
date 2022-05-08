@@ -1,7 +1,7 @@
 package com.kagzz.jmix.rys.product.entity;
 
-import com.kagzz.jmix.rys.entity.Money;
-import com.kagzz.jmix.rys.entity.StandardEntity;
+import com.kagzz.jmix.rys.app.entity.Money;
+import com.kagzz.jmix.rys.app.entity.StandardTenantEntity;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
 import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.InstanceName;
@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
         @Index(name = "IDX_PRODUCTPRICE_PRODUCT_ID", columnList = "PRODUCT_ID")
 })
 @Entity(name = "rys_ProductPrice")
-public class ProductPrice extends StandardEntity {
+public class ProductPrice extends StandardTenantEntity {
 
     @Valid
     @EmbeddedParameters(nullAllowed = false)

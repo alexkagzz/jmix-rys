@@ -1,7 +1,6 @@
 package com.kagzz.jmix.rys.product.screen;
 
 import com.kagzz.jmix.rys.product.entity.*;
-import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
 import com.kagzz.jmix.rys.test_support.ui.FormInteractions;
 import com.kagzz.jmix.rys.test_support.ui.ScreenInteractions;
 import com.kagzz.jmix.rys.test_support.ui.TableInteractions;
@@ -27,23 +26,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProductEditTest extends WebIntegrationTest {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(ProductEditTest.class);
+
     @Autowired
     DataManager dataManager;
-    @Autowired
-    DatabaseCleanup databaseCleanup;
-
     FormInteractions formInteractions;
-
     ProductEdit productEdit;
-
     ScreenInteractions screenInteractions;
-
-    @BeforeEach
-    void setUp() {
-        databaseCleanup.removeAllEntities(Product.class);
-        databaseCleanup.removeAllEntities(ProductCategory.class);
-    }
-
 
     @Nested
     class withOpenedProductEditForm{

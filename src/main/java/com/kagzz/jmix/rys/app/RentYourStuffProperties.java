@@ -1,6 +1,6 @@
-package com.kagzz.jmix.rys;
+package com.kagzz.jmix.rys.app;
 
-import com.kagzz.jmix.rys.entity.Currency;
+import com.kagzz.jmix.rys.app.entity.Currency;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.validation.annotation.Validated;
 
