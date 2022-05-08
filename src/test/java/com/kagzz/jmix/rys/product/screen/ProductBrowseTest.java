@@ -21,14 +21,10 @@ class ProductBrowseTest extends WebIntegrationTest {
     @Autowired
     DataManager dataManager;
 
-    @Autowired
-    DatabaseCleanup databaseCleanup;
-
     private Product product;
 
     @BeforeEach
     void setUp() {
-        databaseCleanup.removeAllEntities(Product.class);
         createInitialProduct();
     }
 

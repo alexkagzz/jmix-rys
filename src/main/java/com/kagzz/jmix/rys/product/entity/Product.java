@@ -1,6 +1,6 @@
 package com.kagzz.jmix.rys.product.entity;
 
-import com.kagzz.jmix.rys.entity.StandardEntity;
+import com.kagzz.jmix.rys.app.entity.StandardTenantEntity;
 import io.jmix.core.DeletePolicy;
 import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.metamodel.annotation.Composition;
@@ -16,7 +16,7 @@ import java.util.List;
         @Index(name = "IDX_PRODUCT_CATEGORY_ID", columnList = "CATEGORY_ID")
 })
 @Entity(name = "rys_Product")
-public class Product extends StandardEntity {
+public class Product extends StandardTenantEntity {
     @InstanceName
     @Column(name = "NAME", nullable = false)
     @NotNull

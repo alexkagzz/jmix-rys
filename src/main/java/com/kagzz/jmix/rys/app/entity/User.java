@@ -1,14 +1,17 @@
-package com.kagzz.jmix.rys.entity;
+package com.kagzz.jmix.rys.app.entity;
 
 import io.jmix.core.HasTimeZone;
 import io.jmix.core.annotation.Secret;
+import io.jmix.core.annotation.TenantId;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import io.jmix.multitenancy.core.AcceptsTenant;
 import io.jmix.security.authentication.JmixUserDetails;
 import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.Collection;
@@ -20,10 +23,14 @@ import java.util.UUID;
 @Table(name = "RYS_USER", indexes = {
         @Index(name = "IDX_RYS_USER_ON_USERNAME", columnList = "USERNAME", unique = true)
 })
-public class User implements JmixUserDetails, HasTimeZone {
+public class User implements JmixUserDetails, HasTimeZone, AcceptsTenant {
+
+    @TenantId
+    @Column(name = "TENANT")
+    private String tenant;
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID", nullable = false)
     @JmixGeneratedValue
     private UUID id;
 
@@ -57,6 +64,13 @@ public class User implements JmixUserDetails, HasTimeZone {
 
     @Transient
     protected Collection<? extends GrantedAuthority> authorities;
+
+    @Override
+    public String getTenantId() { return tenant;}
+
+    public String getTenant() {return tenant;}
+
+    public void setTenant(String tenant) {this.tenant = tenant;}
 
     public UUID getId() {
         return id;
@@ -168,4 +182,5 @@ public class User implements JmixUserDetails, HasTimeZone {
     public void setTimeZoneId(String timeZoneId) {
         this.timeZoneId = timeZoneId;
     }
+
 }

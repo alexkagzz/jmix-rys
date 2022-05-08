@@ -1,11 +1,12 @@
 package com.kagzz.jmix.rys.product;
 
 import com.kagzz.jmix.rys.product.entity.Product;
-import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
-import com.kagzz.jmix.rys.test_support.ValidationVerification;
+import com.kagzz.jmix.rys.test_support.TenantUserEnvironment;
+import com.kagzz.jmix.rys.test_support.Validations;
 import io.jmix.core.DataManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,22 +15,19 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ExtendWith(TenantUserEnvironment.class)
 class ProductValidationTest {
 
     @Autowired
     DataManager dataManager;
 
     @Autowired
-    ValidationVerification validationVerification;
-
-    @Autowired
-    DatabaseCleanup databaseCleanup;
+    Validations validations;
 
     private Product product;
 
     @BeforeEach
     void setUp() {
-        databaseCleanup.removeAllEntities(Product.class);
         product = dataManager.create(Product.class);
     }
 
@@ -40,7 +38,7 @@ class ProductValidationTest {
         product.setName(null);
 
 //        When
-        List<ValidationVerification.ValidationResults> violations = validationVerification.validate(product);
+        List<Validations.ValidationResults> violations = validations.validate(product);
 
 //        Then
         assertThat(violations).hasSize(1);
@@ -53,7 +51,7 @@ class ProductValidationTest {
         product.setName("Prod Two");
 
 //        When
-        List<ValidationVerification.ValidationResults>  violations = validationVerification.validate(product);
+        List<Validations.ValidationResults>  violations = validations.validate(product);
 
 //        Then
         assertThat(violations).isEmpty();

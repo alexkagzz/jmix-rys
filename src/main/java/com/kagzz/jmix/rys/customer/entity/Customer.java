@@ -1,7 +1,7 @@
 package com.kagzz.jmix.rys.customer.entity;
 
-import com.kagzz.jmix.rys.entity.Address;
-import com.kagzz.jmix.rys.entity.StandardEntity;
+import com.kagzz.jmix.rys.app.entity.Address;
+import com.kagzz.jmix.rys.app.entity.StandardTenantEntity;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
 import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.InstanceName;
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @JmixEntity
 @Table(name = "RYS_CUSTOMER")
 @Entity(name = "rys_Customer")
-public class Customer extends StandardEntity {
+public class Customer extends StandardTenantEntity {
     @Column(name = "FIRST_NAME")
     private String firstName;
 

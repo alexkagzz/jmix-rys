@@ -1,12 +1,12 @@
 package com.kagzz.jmix.rys.product;
 
-import com.kagzz.jmix.rys.product.entity.Product;
 import com.kagzz.jmix.rys.product.entity.ProductCategory;
-import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
-import com.kagzz.jmix.rys.test_support.ValidationVerification;
+import com.kagzz.jmix.rys.test_support.TenantUserEnvironment;
+import com.kagzz.jmix.rys.test_support.Validations;
 import io.jmix.core.DataManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
@@ -18,23 +18,20 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ExtendWith(TenantUserEnvironment.class)
 class ProductCategoryValidationTest {
 
     @Autowired
     DataManager dataManager;
 
     @Autowired
-    ValidationVerification validationVerification;
-
-    @Autowired
-    DatabaseCleanup databaseCleanup;
+    Validations validations;
 
     private ProductCategory productCategory;
 
     @BeforeEach
     void setUp() {
-        databaseCleanup.removeAllEntities(ProductCategory.class);
-        productCategory = dataManager.create(ProductCategory.class);
+         productCategory = dataManager.create(ProductCategory.class);
     }
 
     @Test
@@ -45,7 +42,7 @@ class ProductCategoryValidationTest {
         productCategory.setDescription("Foo Category one Desc");
 
 //        When
-        List<ValidationVerification.ValidationResults>  violations = validationVerification.validate(productCategory);
+        List<Validations.ValidationResults>  violations = validations.validate(productCategory);
 
 //        Then
         assertThat(violations).isEmpty();
@@ -61,17 +58,17 @@ class ProductCategoryValidationTest {
         productCategory.setDescription("Foo Category one Desc");
 
 //        When
-        List<ValidationVerification.ValidationResults> violations = validationVerification.validate(productCategory);
+        List<Validations.ValidationResults> violations = validations.validate(productCategory);
 
 //        Then
         assertThat(violations).hasSize(1);
 
-        ValidationVerification.ValidationResults  nameViolations = violations.get(0);
+        Validations.ValidationResults  nameViolations = violations.get(0);
 
         assertThat(nameViolations.getAttribute()).isEqualTo("name");
 
         assertThat(nameViolations.getErrorType())
-                .isEqualTo(validationVerification.validationMessage("NotBlank"));
+                .isEqualTo(validations.validationMessage("NotBlank"));
     }
 
 }

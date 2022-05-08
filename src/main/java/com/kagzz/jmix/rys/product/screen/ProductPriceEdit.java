@@ -1,8 +1,7 @@
 package com.kagzz.jmix.rys.product.screen;
 
-import com.kagzz.jmix.rys.RentYourStuffProperties;
-import com.kagzz.jmix.rys.entity.Currency;
-import com.kagzz.jmix.rys.entity.Money;
+import com.kagzz.jmix.rys.app.RentYourStuffProperties;
+import com.kagzz.jmix.rys.app.entity.Money;
 import io.jmix.core.Messages;
 import io.jmix.ui.component.CurrencyField;
 import io.jmix.ui.model.DataContext;

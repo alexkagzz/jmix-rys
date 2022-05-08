@@ -1,7 +1,7 @@
 package com.kagzz.jmix.rys.customer;
 
-import com.kagzz.jmix.rys.entity.Address;
-import com.kagzz.jmix.rys.test_support.ValidationVerification;
+import com.kagzz.jmix.rys.app.entity.Address;
+import com.kagzz.jmix.rys.test_support.Validations;
 import io.jmix.core.DataManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ class AddressValidationTest {
     DataManager dataManager;
 
     @Autowired
-    ValidationVerification validationVerification;
+    Validations validations;
 
     private Address address;
 
@@ -36,7 +36,7 @@ class AddressValidationTest {
         address.setStreet(null);
 
 //        When
-        List<ValidationVerification.ValidationResults> violations = validationVerification.validate(address);
+        List<Validations.ValidationResults> violations = validations.validate(address);
 
 //        Then
         assertThat(violations).hasSize(1);
@@ -48,7 +48,7 @@ class AddressValidationTest {
         address.setStreet(null);
 
 //        When
-       ValidationVerification.ValidationResults  streetViolations = validationVerification.validateFirst(address);
+       Validations.ValidationResults  streetViolations = validations.validateFirst(address);
 
 //        Then
         assertThat(streetViolations.getAttribute()).isEqualTo("street");

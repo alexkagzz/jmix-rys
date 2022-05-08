@@ -1,6 +1,6 @@
 package com.kagzz.jmix.rys.product.entity;
 
-import com.kagzz.jmix.rys.entity.StandardEntity;
+import com.kagzz.jmix.rys.app.entity.StandardTenantEntity;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
         @Index(name = "IDX_STOCKITEM_PRODUCT_ID", columnList = "PRODUCT_ID")
 })
 @Entity(name = "rys_StockItem")
-public class StockItem extends StandardEntity {
+public class StockItem extends StandardTenantEntity {
     @InstanceName
     @NotBlank
     @Column(name = "IDENTIFIER", nullable = false)

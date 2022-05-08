@@ -1,19 +1,20 @@
 package com.kagzz.jmix.rys.product;
 
-import com.kagzz.jmix.rys.entity.Currency;
-import com.kagzz.jmix.rys.entity.Money;
+import com.kagzz.jmix.rys.app.entity.Currency;
+import com.kagzz.jmix.rys.app.entity.Money;
 import com.kagzz.jmix.rys.product.entity.PriceUnit;
 import com.kagzz.jmix.rys.product.entity.Product;
 import com.kagzz.jmix.rys.product.entity.ProductCategory;
 import com.kagzz.jmix.rys.product.entity.ProductPrice;
-import com.kagzz.jmix.rys.test_support.DatabaseCleanup;
+import com.kagzz.jmix.rys.test_support.TenantUserEnvironment;
+import com.kagzz.jmix.rys.test_support.test_data.Products;
 import io.jmix.core.DataManager;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.Id;
-import io.jmix.core.security.SystemAuthenticator;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -24,24 +25,19 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ExtendWith(TenantUserEnvironment.class)
 class ProductStorageTest {
 
     @Autowired
     DataManager dataManager;
 
     @Autowired
-    SystemAuthenticator systemAuthenticator;
-
-    @Autowired
-    DatabaseCleanup databaseCleanup;
+    Products products;
 
     private Product product;
 
     @BeforeEach
     void setUp() {
-        databaseCleanup.removeAllEntities(ProductPrice.class);
-        databaseCleanup.removeAllEntities(Product.class);
-        databaseCleanup.removeAllEntities(ProductCategory.class);
         product = dataManager.create(Product.class);
     }
 
@@ -49,13 +45,14 @@ class ProductStorageTest {
     void given_validProduct_when_saveProduct_then_productIsSaved() {
 
 //        Given
-        product.setName("Prod One");
-        product.setDescription("Description for prod One");
+        Product savedProduct = products.save(
+                products.defaultData()
+                        .name("Prod One")
+                        .description("Description for prod One")
+                        .build()
+        );
 
-//        When
-        Product savedProduct = systemAuthenticator.withSystem(() -> dataManager.save(product));
-
-//        Then
+//        Expect
         assertThat(savedProduct.getId()).isNotNull();
     }
 
@@ -75,10 +72,8 @@ class ProductStorageTest {
         product.setPrices(List.of(pricePerDay, pricePerWeek, pricePerMonth));
 
 //        When
-        Optional<Product> savedProduct = systemAuthenticator.withSystem(() -> {
-            dataManager.save(product, pricePerDay, pricePerWeek, pricePerMonth);
-            return dataManager.load(Id.of(product)).optional();
-        });
+        dataManager.save(product, pricePerDay, pricePerWeek, pricePerMonth);
+        Optional<Product> savedProduct = dataManager.load(Id.of(product)).optional();
 
 //        Then
         assertThat(savedProduct).isPresent();
@@ -88,19 +83,17 @@ class ProductStorageTest {
     void given_validProductWithCategory_when_saveProduct_then_productAndCategoryAreSaved() {
 
 //        Given
-        product.setName("Prod One");
-        product.setDescription("Description for prod One");
-
-//        And
         ProductCategory savedProductCategory = saveProductCategory("Foo Category One");
 
-        product.setCategory(savedProductCategory);
+        Product product = products.save(
+                products.defaultData()
+                        .category(savedProductCategory)
+                        .build()
+        );
 
 //        When
-        Optional<Product> savedProduct = systemAuthenticator.withSystem(() -> {
-            dataManager.save(product);
-            return loadProductWithCategory(product);
-        });
+        dataManager.save(product);
+        Optional<Product> savedProduct = loadProductWithCategory(product);
 
 //        Then
         assertThat(savedProduct)
@@ -136,7 +129,7 @@ class ProductStorageTest {
     private ProductCategory saveProductCategory(String name) {
         ProductCategory productCategory = dataManager.create(ProductCategory.class);
         productCategory.setName(name);
-        return systemAuthenticator.withSystem(() -> dataManager.save(productCategory));
+        return  dataManager.save(productCategory) ;
     }
 
 
